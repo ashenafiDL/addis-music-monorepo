@@ -4,19 +4,21 @@ const bodyParser = require("body-parser")
 require("dotenv").config()
 const connectDB = require("./config/db")
 
+const albumRoutes = require("./routes/albums")
+const artistRoutes = require("./routes/artists")
+
 const app = express()
 const port = process.env.PORT || 4000
+
+// Database Connection
+connectDB()
 
 // Middleware
 app.use(cors())
 app.use(bodyParser.json())
 
-// Database Connection
-connectDB()
-
-app.get("/", (req, res) => {
-  res.send("Hello World!")
-})
+app.use("/api/albums", albumRoutes)
+app.use("/api/artists", artistRoutes)
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`)
