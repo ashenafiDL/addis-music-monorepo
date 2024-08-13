@@ -12,12 +12,6 @@ const artistSchema = new mongoose.Schema({
     trim: true,
     maxlength: 500,
   },
-  genres: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Genre",
-    },
-  ],
 })
 
 const Artist = mongoose.model("Artist", artistSchema)
