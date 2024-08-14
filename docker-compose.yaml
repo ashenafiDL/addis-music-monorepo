@@ -5,3 +5,11 @@ services:
     container_name: song-api
     ports:
       - "4000:4000"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: song-frontend
+    ports:
+      - "3000:3000"
+    depends_on: [backend]
