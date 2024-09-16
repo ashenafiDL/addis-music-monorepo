@@ -8,9 +8,17 @@ const StyledButton = styled.button`
   color: var(--text-100);
   border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   &:hover {
     opacity: 0.8;
   }
 `;
 
-export default StyledButton;
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
+
+export { ButtonContainer, StyledButton };

@@ -1,5 +1,5 @@
 import { Link, useRouteError } from "react-router-dom";
-import StyledButton from "./components/button";
+import { StyledButton } from "./components/button";
 
 export default function ErrorPage() {
   const error: any = useRouteError(); // react-router-dom doesn't have typescript support
