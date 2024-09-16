@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import styled from "@emotion/styled";
 
 const StyledLoading = styled.div`
@@ -21,12 +23,24 @@ const StyledContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
 `;
 
 export default function Loading() {
   return (
     <StyledContainer>
       <StyledLoading />
+      <p
+        css={{
+          textAlign: "center",
+          marginTop: "1rem",
+          color: "var(--text-100)",
+        }}
+      >
+        Loading...
+      </p>
     </StyledContainer>
   );
 }
