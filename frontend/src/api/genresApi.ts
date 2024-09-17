@@ -6,3 +6,7 @@ export const getGenres = async () => {
   const response = await axios.get(`${API_BASE_URL}/genres`);
   return response.data;
 };
+
+export const deleteGenreApi = async (id: string) => {
+  await axios.delete(`${API_BASE_URL}/genres/${id}`);
+};

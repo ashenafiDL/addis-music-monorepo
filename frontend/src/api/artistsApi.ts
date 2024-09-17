@@ -6,3 +6,7 @@ export const getArtists = async () => {
   const response = await axios.get(`${API_BASE_URL}/artists`);
   return response.data;
 };
+
+export const deleteArtistApi = async (id: string) => {
+  await axios.delete(`${API_BASE_URL}/artists/${id}`);
+};

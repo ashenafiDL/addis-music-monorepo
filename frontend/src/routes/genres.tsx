@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StyledButton } from "../components/button";
 import Header, { HeaderContainer } from "../components/header";
-import Loading from "../components/loading";
 import {
   StyledTable,
   StyledTableBody,
@@ -14,12 +13,16 @@ import {
   StyledTableHeader,
   StyledTableRow,
 } from "../components/table";
-import { fetchGenres } from "../features/genres/genresSlice";
+import { deleteGenre, fetchGenres } from "../features/genres/genresSlice";
 
 export default function Genres() {
   const dispatch = useDispatch();
   const loading = useSelector((state: any) => state.genres.loading);
   const genres = useSelector((state: any) => state.genres.genres);
+
+  const handleDelete = (genreId: string) => {
+    dispatch(deleteGenre(genreId));
+  };
 
   useEffect(() => {
     dispatch(fetchGenres());
@@ -35,42 +38,46 @@ export default function Genres() {
         </StyledButton>
       </HeaderContainer>
 
-      {loading ? (
-        <Loading />
-      ) : (
-        <StyledTable>
-          <StyledTableHead>
-            <StyledTableRow>
-              <StyledTableHeader>#</StyledTableHeader>
-              <StyledTableHeader>Name</StyledTableHeader>
-              <StyledTableHeader>Description</StyledTableHeader>
-              <StyledTableHeader>Actions</StyledTableHeader>
+      <div css={{ color: "var(--text-200)" }}>
+        {loading ? "Updating genre list..." : `Total: ${genres.length}`}
+      </div>
+
+      <StyledTable>
+        <StyledTableHead>
+          <StyledTableRow>
+            <StyledTableHeader>#</StyledTableHeader>
+            <StyledTableHeader>Name</StyledTableHeader>
+            <StyledTableHeader>Description</StyledTableHeader>
+            <StyledTableHeader>Actions</StyledTableHeader>
+          </StyledTableRow>
+        </StyledTableHead>
+        <StyledTableBody>
+          {genres.map((genre: any, index: number) => (
+            <StyledTableRow key={index}>
+              <StyledTableCell>{index + 1}</StyledTableCell>
+              <StyledTableCell>{genre.name}</StyledTableCell>
+              <StyledTableCell>{genre.description}</StyledTableCell>
+              <StyledTableCell
+                css={{
+                  display: "flex",
+                  gap: ".8rem",
+                  alignItems: "center",
+                  "&:hover > *": {
+                    cursor: "pointer",
+                  },
+                }}
+              >
+                <IconPencil size={20} />
+                <IconTrash
+                  color="red"
+                  size={20}
+                  onClick={() => handleDelete(genre._id)}
+                />
+              </StyledTableCell>
             </StyledTableRow>
-          </StyledTableHead>
-          <StyledTableBody>
-            {genres.map((genre: any, index: number) => (
-              <StyledTableRow key={index}>
-                <StyledTableCell>{index + 1}</StyledTableCell>
-                <StyledTableCell>{genre.name}</StyledTableCell>
-                <StyledTableCell>{genre.description}</StyledTableCell>
-                <StyledTableCell
-                  css={{
-                    display: "flex",
-                    gap: ".8rem",
-                    alignItems: "center",
-                    "&:hover > *": {
-                      cursor: "pointer",
-                    },
-                  }}
-                >
-                  <IconPencil size={20} />
-                  <IconTrash color="red" size={20} />
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </StyledTableBody>
-        </StyledTable>
-      )}
+          ))}
+        </StyledTableBody>
+      </StyledTable>
     </div>
   );
 }
