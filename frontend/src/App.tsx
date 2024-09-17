@@ -22,35 +22,48 @@ const navItems = [
 ];
 
 const StyledHome = styled.div`
-  display: grid;
-  grid-template-columns: 4rem 1fr;
-  gap: 2rem;
   padding: 2rem;
-  height: calc(100vh - 8rem);
+  padding-left: calc(4rem + 4rem);
 
   ${mq[2]} {
     grid-template-columns: 1fr;
     grid-template-rows: 4rem 1fr;
     padding: 1rem;
+    padding-left: 1rem;
     gap: 1rem;
   }
 `;
 
 const StyledNavBar = styled.nav`
+  position: fixed;
+  left: 2rem;
+  top: 2rem;
+  bottom: 2rem;
+  width: 4rem;
   border: 1px solid var(--bg-300);
   display: flex;
   align-items: center;
   border-radius: 8px;
   flex-direction: column;
-  height: 100%;
+  // height: 100%;
+  max-height: 100vh;
   padding: 2rem 0;
   gap: 2rem;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  background-color: var(--bg-100);
 
   ${mq[2]} {
+    position: static;
+    height: 4rem;
+    top: 0;
+    left: 0;
+    position: relative;
+    width: 100%;
+    max-width: calc(100% - 2rem);
     flex-direction: row;
     padding: 0 1rem;
     gap: 1rem;
+    justify-content: space-between;
   }
 `;
 
