@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Artist {
-  id: number;
+  id: string;
   name: string;
   bio: string;
 }
@@ -30,10 +30,25 @@ const artistsSlice = createSlice({
     fetchArtistsFailure: (state) => {
       state.loading = false;
     },
+    deleteArtist: (state, action: PayloadAction<string>) => {
+      state.loading = true;
+    },
+    deleteArtistSuccess: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+    },
+    deleteArtistFailure: (state) => {
+      state.loading = false;
+    },
   },
 });
 
-export const { fetchArtists, fetchArtistsSuccess, fetchArtistsFailure } =
-  artistsSlice.actions;
+export const {
+  fetchArtists,
+  fetchArtistsSuccess,
+  fetchArtistsFailure,
+  deleteArtist,
+  deleteArtistSuccess,
+  deleteArtistFailure,
+} = artistsSlice.actions;
 
 export default artistsSlice.reducer;

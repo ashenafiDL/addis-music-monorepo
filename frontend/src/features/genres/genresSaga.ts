@@ -1,6 +1,10 @@
+import { PayloadAction } from "@reduxjs/toolkit";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { getGenres } from "../../api/genresApi";
+import { deleteGenreApi, getGenres } from "../../api/genresApi";
 import {
+  deleteGenre,
+  deleteGenreFailure,
+  deleteGenreSuccess,
   fetchGenres,
   fetchGenresFailure,
   fetchGenresSuccess,
@@ -15,6 +19,19 @@ function* fetchGenresSaga(): Generator<any, void, any> {
   }
 }
 
+function* deleteArtistSaga(
+  action: PayloadAction<string>
+): Generator<any, void, any> {
+  try {
+    yield call(deleteGenreApi, action.payload);
+    yield put(deleteGenreSuccess(action.payload));
+    yield put(fetchGenres());
+  } catch (error) {
+    yield put(deleteGenreFailure());
+  }
+}
+
 export function* genresSaga() {
   yield takeLatest(fetchGenres.type, fetchGenresSaga);
+  yield takeLatest(deleteGenre.type, deleteArtistSaga);
 }

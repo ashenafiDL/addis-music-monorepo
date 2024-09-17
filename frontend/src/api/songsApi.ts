@@ -6,3 +6,7 @@ export const getSongs = async () => {
   const response = await axios.get(`${API_BASE_URL}/songs`);
   return response.data;
 };
+
+export const deleteSongsApi = async (id: string) => {
+  await axios.delete(`${API_BASE_URL}/songs/${id}`);
+};

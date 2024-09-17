@@ -30,10 +30,25 @@ const genresSlice = createSlice({
     fetchGenresFailure: (state) => {
       state.loading = false;
     },
+    deleteGenre: (state, action: PayloadAction<string>) => {
+      state.loading = true;
+    },
+    deleteGenreSuccess: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+    },
+    deleteGenreFailure: (state) => {
+      state.loading = false;
+    },
   },
 });
 
-export const { fetchGenres, fetchGenresSuccess, fetchGenresFailure } =
-  genresSlice.actions;
+export const {
+  fetchGenres,
+  fetchGenresSuccess,
+  fetchGenresFailure,
+  deleteGenre,
+  deleteGenreSuccess,
+  deleteGenreFailure,
+} = genresSlice.actions;
 
 export default genresSlice.reducer;
