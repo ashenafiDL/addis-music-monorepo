@@ -1,9 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StyledButton } from "../components/button";
+import GenreModal from "../components/GenreModal";
 import Header, { HeaderContainer } from "../components/header";
 import {
   StyledTable,
@@ -13,12 +14,21 @@ import {
   StyledTableHeader,
   StyledTableRow,
 } from "../components/table";
-import { deleteGenre, fetchGenres } from "../features/genres/genresSlice";
+import {
+  addGenre,
+  deleteGenre,
+  fetchGenres,
+} from "../features/genres/genresSlice";
 
 export default function Genres() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const loading = useSelector((state: any) => state.genres.loading);
   const genres = useSelector((state: any) => state.genres.genres);
+
+  const handleAdd = (data: any) => {
+    dispatch(addGenre(data));
+  };
 
   const handleDelete = (genreId: string) => {
     dispatch(deleteGenre(genreId));
@@ -33,7 +43,7 @@ export default function Genres() {
       <HeaderContainer>
         <Header>Genres</Header>
 
-        <StyledButton>
+        <StyledButton onClick={() => setIsModalOpen(true)}>
           <IconPlus size={20} /> Add new
         </StyledButton>
       </HeaderContainer>
@@ -78,6 +88,12 @@ export default function Genres() {
           ))}
         </StyledTableBody>
       </StyledTable>
+
+      <GenreModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleAdd}
+      />
     </div>
   );
 }

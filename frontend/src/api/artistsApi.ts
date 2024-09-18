@@ -10,3 +10,8 @@ export const getArtists = async () => {
 export const deleteArtistApi = async (id: string) => {
   await axios.delete(`${API_BASE_URL}/artists/${id}`);
 };
+
+export const addArtistApi = async (newArtist: any) => {
+  const response = await axios.post(`${API_BASE_URL}/artists`, newArtist);
+  return response.data;
+};

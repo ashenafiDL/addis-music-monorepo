@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
 
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import AlbumModal from "../components/AlbumModal";
 import { StyledButton } from "../components/button";
 import Header, { HeaderContainer } from "../components/header";
 import {
@@ -13,13 +14,24 @@ import {
   StyledTableHeader,
   StyledTableRow,
 } from "../components/table";
-import { deleteAlbum, fetchAlbums } from "../features/albums/albumsSlice";
+import {
+  addAlbum,
+  deleteAlbum,
+  fetchAlbums,
+} from "../features/albums/albumsSlice";
 import formatDate from "../utils/formatDate";
 
 export default function Albums() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const loading = useSelector((state: any) => state.albums.loading);
   const albums = useSelector((state: any) => state.albums.albums);
+
+  const handleAdd = (data: any) => {
+    console.log(data);
+
+    dispatch(addAlbum(data));
+  };
 
   const handleDelete = (albumId: string) => {
     dispatch(deleteAlbum(albumId));
@@ -33,7 +45,7 @@ export default function Albums() {
     <div>
       <HeaderContainer>
         <Header>Albums</Header>
-        <StyledButton>
+        <StyledButton onClick={() => setIsModalOpen(true)}>
           <IconPlus size={20} /> Add new
         </StyledButton>
       </HeaderContainer>
@@ -48,7 +60,6 @@ export default function Albums() {
             <StyledTableHeader>#</StyledTableHeader>
             <StyledTableHeader>Title</StyledTableHeader>
             <StyledTableHeader>Artist</StyledTableHeader>
-            <StyledTableHeader>Album</StyledTableHeader>
             <StyledTableHeader>Genres</StyledTableHeader>
             <StyledTableHeader>Release Date</StyledTableHeader>
             <StyledTableHeader>Actions</StyledTableHeader>
@@ -60,7 +71,6 @@ export default function Albums() {
               <StyledTableCell>{index + 1}</StyledTableCell>
               <StyledTableCell>{album.title}</StyledTableCell>
               <StyledTableCell>{album?.artist?.name || "-"}</StyledTableCell>
-              <StyledTableCell>{album?.album?.title || "-"}</StyledTableCell>
               <StyledTableCell>
                 {album.genres.map((genre: any) => genre.name).join(", ") || "-"}
               </StyledTableCell>
@@ -90,6 +100,12 @@ export default function Albums() {
           ))}
         </StyledTableBody>
       </StyledTable>
+
+      <AlbumModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleAdd}
+      />
     </div>
   );
 }

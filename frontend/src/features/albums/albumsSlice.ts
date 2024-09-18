@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Album {
-  id: string;
+  _id: string;
   title: string;
   artist: string;
   releaseDate: number;
@@ -36,9 +36,22 @@ const albumsSlice = createSlice({
       state.loading = true;
     },
     deleteAlbumSuccess: (state, action: PayloadAction<string>) => {
+      state.albums = state.albums.filter(
+        (album) => album._id !== action.payload
+      );
       state.loading = false;
     },
     deleteAlbumFailure: (state) => {
+      state.loading = false;
+    },
+    addAlbum: (state, action: PayloadAction<Album>) => {
+      state.loading = true;
+    },
+    addAlbumSuccess: (state, action: PayloadAction<Album>) => {
+      state.albums.push(action.payload);
+      state.loading = false;
+    },
+    addAlbumFailure: (state) => {
       state.loading = false;
     },
   },
@@ -51,6 +64,9 @@ export const {
   deleteAlbum,
   deleteAlbumSuccess,
   deleteAlbumFailure,
+  addAlbum,
+  addAlbumSuccess,
+  addAlbumFailure,
 } = albumsSlice.actions;
 
 export default albumsSlice.reducer;

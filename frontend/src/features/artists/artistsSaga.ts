@@ -1,7 +1,14 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { deleteArtistApi, getArtists } from "../../api/artistsApi";
 import {
+  addArtistApi,
+  deleteArtistApi,
+  getArtists,
+} from "../../api/artistsApi";
+import {
+  addArtist,
+  addArtistFailure,
+  addArtistSuccess,
   deleteArtist,
   deleteArtistFailure,
   deleteArtistSuccess,
@@ -25,13 +32,23 @@ function* deleteArtistSaga(
   try {
     yield call(deleteArtistApi, action.payload);
     yield put(deleteArtistSuccess(action.payload));
-    yield put(fetchArtists());
   } catch (error) {
     yield put(deleteArtistFailure());
+  }
+}
+
+function* addArtistSaga(action: PayloadAction<any>): Generator<any, void, any> {
+  try {
+    const newArtist = yield call(addArtistApi, action.payload);
+    yield put(addArtistSuccess(newArtist));
+    yield put(fetchArtists()); // Fetch updated artists list after adding
+  } catch (error) {
+    yield put(addArtistFailure());
   }
 }
 
 export function* artistsSaga() {
   yield takeLatest(fetchArtists.type, fetchArtistsSaga);
   yield takeLatest(deleteArtist.type, deleteArtistSaga);
+  yield takeLatest(addArtist.type, addArtistSaga);
 }
