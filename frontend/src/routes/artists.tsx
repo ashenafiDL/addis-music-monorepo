@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
 
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ArtistModal from "../components/ArtistModal";
 import { StyledButton } from "../components/button";
 import Header, { HeaderContainer } from "../components/header";
 import {
@@ -13,12 +14,21 @@ import {
   StyledTableHeader,
   StyledTableRow,
 } from "../components/table";
-import { deleteArtist, fetchArtists } from "../features/artists/artistsSlice";
+import {
+  addArtist,
+  deleteArtist,
+  fetchArtists,
+} from "../features/artists/artistsSlice";
 
 export default function Artists() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const loading = useSelector((state: any) => state.artists.loading);
   const artists = useSelector((state: any) => state.artists.artists);
+
+  const handleAdd = (data: any) => {
+    dispatch(addArtist(data));
+  };
 
   const handleDelete = (artistId: string) => {
     dispatch(deleteArtist(artistId));
@@ -32,7 +42,7 @@ export default function Artists() {
     <div>
       <HeaderContainer>
         <Header>Artists</Header>
-        <StyledButton>
+        <StyledButton onClick={() => setIsModalOpen(true)}>
           <IconPlus size={20} /> Add new
         </StyledButton>
       </HeaderContainer>
@@ -77,6 +87,12 @@ export default function Artists() {
           ))}
         </StyledTableBody>
       </StyledTable>
+
+      <ArtistModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleAdd}
+      />
     </div>
   );
 }

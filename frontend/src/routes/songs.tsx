@@ -1,10 +1,11 @@
 /** @jsxImportSource @emotion/react */
 
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StyledButton } from "../components/button";
 import Header, { HeaderContainer } from "../components/header";
+import SongModal from "../components/SongModal";
 import {
   StyledTable,
   StyledTableBody,
@@ -13,16 +14,21 @@ import {
   StyledTableHeader,
   StyledTableRow,
 } from "../components/table";
-import { deleteSong, fetchSongs } from "../features/songs/songsSlice";
+import { addSong, deleteSong, fetchSongs } from "../features/songs/songsSlice";
 import formatDate from "../utils/formatDate";
 
 export default function Songs() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const loading = useSelector((state: any) => state.songs.loading);
   const songs = useSelector((state: any) => state.songs.songs);
 
   const handleDelete = (songId: string) => {
     dispatch(deleteSong(songId));
+  };
+
+  const handleAdd = (data: any) => {
+    dispatch(addSong(data));
   };
 
   useEffect(() => {
@@ -34,7 +40,7 @@ export default function Songs() {
       <HeaderContainer>
         <Header>Songs</Header>
 
-        <StyledButton>
+        <StyledButton onClick={() => setIsModalOpen(true)}>
           <IconPlus size={20} /> Add new
         </StyledButton>
       </HeaderContainer>
@@ -89,6 +95,12 @@ export default function Songs() {
           ))}
         </StyledTableBody>
       </StyledTable>
+
+      <SongModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleAdd}
+      />
     </div>
   );
 }

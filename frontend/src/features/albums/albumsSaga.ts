@@ -1,7 +1,10 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { deleteAlbumApi, getAlbums } from "../../api/albumApi";
+import { addAlbumApi, deleteAlbumApi, getAlbums } from "../../api/albumApi";
 import {
+  addAlbum,
+  addAlbumFailure,
+  addAlbumSuccess,
   deleteAlbum,
   deleteAlbumFailure,
   deleteAlbumSuccess,
@@ -25,13 +28,22 @@ function* deleteAlbumSaga(
   try {
     yield call(deleteAlbumApi, action.payload);
     yield put(deleteAlbumSuccess(action.payload));
-    yield put(fetchAlbums());
   } catch (error) {
     yield put(deleteAlbumFailure());
+  }
+}
+
+function* addAlbumSaga(action: PayloadAction<any>): Generator<any, void, any> {
+  try {
+    const newAlbum = yield call(addAlbumApi, action.payload);
+    yield put(addAlbumSuccess(newAlbum));
+  } catch (error) {
+    yield put(addAlbumFailure());
   }
 }
 
 export function* albumSaga() {
   yield takeLatest(fetchAlbums.type, fetchAlbumSaga);
   yield takeLatest(deleteAlbum.type, deleteAlbumSaga);
+  yield takeLatest(addAlbum.type, addAlbumSaga);
 }

@@ -10,3 +10,8 @@ export const getGenres = async () => {
 export const deleteGenreApi = async (id: string) => {
   await axios.delete(`${API_BASE_URL}/genres/${id}`);
 };
+
+export const addGenreApi = async (newGenre: any) => {
+  const response = await axios.post(`${API_BASE_URL}/genres`, newGenre);
+  return response.data;
+};
