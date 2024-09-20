@@ -14,11 +14,19 @@ import {
   StyledTableHeader,
   StyledTableRow,
 } from "../components/table";
-import { addSong, deleteSong, fetchSongs } from "../features/songs/songsSlice";
+import {
+  addSong,
+  deleteSong,
+  fetchSongs,
+  Song,
+  updateSong,
+} from "../features/songs/songsSlice";
 import formatDate from "../utils/formatDate";
 
 export default function Songs() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddingSong, setIsAddingSong] = useState(false);
+  const [currentSong, setCurrentSong] = useState<Song | undefined>();
   const dispatch = useDispatch();
   const loading = useSelector((state: any) => state.songs.loading);
   const songs = useSelector((state: any) => state.songs.songs);
@@ -31,6 +39,12 @@ export default function Songs() {
     dispatch(addSong(data));
   };
 
+  const handleUpdate = (data: Song) => {
+    console.log(data, "ggg");
+
+    dispatch(updateSong(data));
+  };
+
   useEffect(() => {
     dispatch(fetchSongs());
   }, [dispatch]);
@@ -40,7 +54,12 @@ export default function Songs() {
       <HeaderContainer>
         <Header>Songs</Header>
 
-        <StyledButton onClick={() => setIsModalOpen(true)}>
+        <StyledButton
+          onClick={() => {
+            setIsAddingSong(true);
+            setIsModalOpen(true);
+          }}
+        >
           <IconPlus size={20} /> Add new
         </StyledButton>
       </HeaderContainer>
@@ -84,7 +103,13 @@ export default function Songs() {
                   },
                 }}
               >
-                <IconPencil size={20} />
+                <IconPencil
+                  size={20}
+                  onClick={() => {
+                    setCurrentSong({ ...song, _id: song._id });
+                    setIsModalOpen(true);
+                  }}
+                />
                 <IconTrash
                   color="red"
                   size={20}
@@ -96,11 +121,25 @@ export default function Songs() {
         </StyledTableBody>
       </StyledTable>
 
-      <SongModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAdd}
-      />
+      {isAddingSong && (
+        <SongModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleAdd}
+        />
+      )}
+
+      {currentSong !== undefined && (
+        <SongModal
+          existingData={currentSong}
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setCurrentSong(undefined);
+          }}
+          onSubmit={handleUpdate}
+        />
+      )}
     </div>
   );
 }

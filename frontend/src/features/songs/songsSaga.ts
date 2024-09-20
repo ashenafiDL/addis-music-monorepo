@@ -1,6 +1,11 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { addSongApi, deleteSongsApi, getSongs } from "../../api/songsApi";
+import {
+  addSongApi,
+  deleteSongsApi,
+  getSongs,
+  updateSongApi,
+} from "../../api/songsApi";
 import {
   addSong,
   addSongFailure,
@@ -11,6 +16,9 @@ import {
   fetchSongs,
   fetchSongsFailure,
   fetchSongsSuccess,
+  updateSong,
+  updateSongFailure,
+  updateSongSuccess,
 } from "./songsSlice";
 
 function* fetchSongsSaga(): Generator<any, void, any> {
@@ -42,8 +50,20 @@ function* addSongSaga(action: PayloadAction<any>): Generator<any, void, any> {
   }
 }
 
+function* updateSongSaga(
+  action: PayloadAction<any>
+): Generator<any, void, any> {
+  try {
+    const updatedSong = yield call(updateSongApi, action.payload);
+    yield put(updateSongSuccess(updatedSong));
+  } catch (error) {
+    yield put(updateSongFailure());
+  }
+}
+
 export function* songsSaga() {
   yield takeLatest(fetchSongs.type, fetchSongsSaga);
   yield takeLatest(deleteSong.type, deleteArtistSaga);
   yield takeLatest(addSong.type, addSongSaga);
+  yield takeLatest(updateSong.type, updateSongSaga);
 }

@@ -13,20 +13,26 @@ type Props = {
   isOpen: boolean;
   onClose: Function;
   onSubmit: Function;
+  existingData?: any;
 };
 
-export default function SongModal({ isOpen, onClose, onSubmit }: Props) {
+export default function SongModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  existingData,
+}: Props) {
   const dispatch = useDispatch();
   const artists = useSelector((state: any) => state.artists.artists);
   const albums = useSelector((state: any) => state.albums.albums);
   const genres = useSelector((state: any) => state.genres.genres);
 
   const [formData, setFormData] = useState({
-    title: "",
-    artistId: "",
-    albumId: "",
-    genreIds: [],
-    releaseDate: "",
+    title: existingData?.title || "",
+    artistId: existingData?.artist?.name || "",
+    albumId: existingData?.album?.title || "",
+    genreIds: existingData?.genre || [],
+    releaseDate: existingData?.releaseDate || "",
   });
 
   const handleChange = (e: any) => {
@@ -51,7 +57,7 @@ export default function SongModal({ isOpen, onClose, onSubmit }: Props) {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit({ ...formData, _id: existingData?._id });
     setFormData({
       title: "",
       artistId: "",
@@ -79,7 +85,7 @@ export default function SongModal({ isOpen, onClose, onSubmit }: Props) {
             marginBottom: "2rem",
           }}
         >
-          Add Music
+          {existingData ? "Add Music" : "Edit Music"}
         </h2>
         <Form onSubmit={handleSubmit}>
           <FormElement>
@@ -169,7 +175,9 @@ export default function SongModal({ isOpen, onClose, onSubmit }: Props) {
             >
               Cancel
             </StyledButton>
-            <StyledButton type="submit">Add</StyledButton>
+            <StyledButton type="submit">
+              {existingData !== undefined ? "Update" : "Add"}
+            </StyledButton>
           </ButtonContainer>
         </Form>
       </ModalContainer>
