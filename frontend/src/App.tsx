@@ -74,7 +74,7 @@ function App() {
     <StyledHome>
       <StyledNavBar>
         <Link
-          to="/songs"
+          to="/"
           css={{
             color: "var(--primary-300)",
             [mq[0]]: {

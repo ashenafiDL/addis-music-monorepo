@@ -61,7 +61,6 @@ const albumsSlice = createSlice({
       const index = state.albums.findIndex(
         (album) => album._id === action.payload._id
       );
-      console.log(action.payload, "ppp");
 
       if (index !== -1) {
         state.albums[index] = action.payload;
