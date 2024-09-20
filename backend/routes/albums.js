@@ -12,7 +12,10 @@ router.post("/", async (req, res) => {
   try {
     const album = new Album(req.body)
     await album.save()
-    res.status(201).json(album)
+    const newAlbum = await Album.findOne(album._id)
+      .populate("artist", "name")
+      .populate("genres", "name")
+    res.status(201).json(newAlbum)
   } catch (error) {
     res.status(400).json({ message: error.message })
   }
@@ -49,8 +52,15 @@ router.patch("/:id", async (req, res) => {
     const album = await Album.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     })
-    if (!album) return res.status(404).json({ message: "Album not found" })
-    else res.status(200).json({ message: "Album updated successfully", album })
+    const updatedAlbum = await Album.findOne(album._id)
+      .populate("artist", "name")
+      .populate("genres", "name")
+    if (!updatedAlbum)
+      return res.status(404).json({ message: "Album not found" })
+    else
+      res
+        .status(200)
+        .json({ message: "Album updated successfully", updatedAlbum })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }

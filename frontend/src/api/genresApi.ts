@@ -15,3 +15,12 @@ export const addGenreApi = async (newGenre: any) => {
   const response = await axios.post(`${API_BASE_URL}/genres`, newGenre);
   return response.data;
 };
+
+export const updateGenreApi = async (newGenre: any) => {
+  const response = await axios.patch(
+    `${API_BASE_URL}/genres/${newGenre._id}`,
+    newGenre
+  );
+
+  return response.data.updatedGenre;
+};

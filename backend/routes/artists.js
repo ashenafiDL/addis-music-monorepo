@@ -38,11 +38,18 @@ router.get("/:id", async (req, res) => {
 // Update an artist by ID
 router.patch("/:id", async (req, res) => {
   try {
-    const artist = await Artist.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    })
-    if (!artist) return res.status(404).json({ message: "Artist not found" })
-    res.status(200).json({ message: "Artist updated successfully", artist })
+    const updatedArtist = await Artist.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+      }
+    )
+    if (!updatedArtist)
+      return res.status(404).json({ message: "Artist not found" })
+    res
+      .status(200)
+      .json({ message: "Artist updated successfully", updatedArtist })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }

@@ -4,6 +4,7 @@ import {
   addArtistApi,
   deleteArtistApi,
   getArtists,
+  updateArtistApi,
 } from "../../api/artistsApi";
 import {
   addArtist,
@@ -15,6 +16,9 @@ import {
   fetchArtists,
   fetchArtistsFailure,
   fetchArtistsSuccess,
+  updateArtist,
+  updateArtistFailure,
+  updateArtistSuccess,
 } from "./artistsSlice";
 
 function* fetchArtistsSaga(): Generator<any, void, any> {
@@ -41,9 +45,19 @@ function* addArtistSaga(action: PayloadAction<any>): Generator<any, void, any> {
   try {
     const newArtist = yield call(addArtistApi, action.payload);
     yield put(addArtistSuccess(newArtist));
-    yield put(fetchArtists()); // Fetch updated artists list after adding
   } catch (error) {
     yield put(addArtistFailure());
+  }
+}
+
+function* updateArtistSaga(
+  action: PayloadAction<any>
+): Generator<any, void, any> {
+  try {
+    const updatedArtist = yield call(updateArtistApi, action.payload);
+    yield put(updateArtistSuccess(updatedArtist));
+  } catch (error) {
+    yield put(updateArtistFailure());
   }
 }
 
@@ -51,4 +65,5 @@ export function* artistsSaga() {
   yield takeLatest(fetchArtists.type, fetchArtistsSaga);
   yield takeLatest(deleteArtist.type, deleteArtistSaga);
   yield takeLatest(addArtist.type, addArtistSaga);
+  yield takeLatest(updateArtist.type, updateArtistSaga);
 }

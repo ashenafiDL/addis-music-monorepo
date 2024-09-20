@@ -12,18 +12,24 @@ type Props = {
   isOpen: boolean;
   onClose: Function;
   onSubmit: Function;
+  existingData?: any;
 };
 
-export default function AlbumModal({ isOpen, onClose, onSubmit }: Props) {
+export default function AlbumModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  existingData,
+}: Props) {
   const dispatch = useDispatch();
   const artists = useSelector((state: any) => state.artists.artists);
   const genres = useSelector((state: any) => state.genres.genres);
 
   const [formData, setFormData] = useState({
-    title: "",
-    artist: "",
-    genreIds: [],
-    releaseDate: "",
+    title: existingData?.title || "",
+    artist: existingData?.artist?.name || "",
+    genres: existingData?.genres || [],
+    releaseDate: existingData?.releaseDate || "",
   });
 
   const handleChange = (e: any) => {
@@ -48,11 +54,11 @@ export default function AlbumModal({ isOpen, onClose, onSubmit }: Props) {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit({ ...formData, _id: existingData?._id });
     setFormData({
       title: "",
       artist: "",
-      genreIds: [],
+      genres: [],
       releaseDate: "",
     });
     onClose();
@@ -74,7 +80,7 @@ export default function AlbumModal({ isOpen, onClose, onSubmit }: Props) {
             marginBottom: "2rem",
           }}
         >
-          Add Album
+          {existingData === undefined ? "Add Album" : "Update Album"}
         </h2>
         <Form onSubmit={handleSubmit}>
           <FormElement>
@@ -107,8 +113,8 @@ export default function AlbumModal({ isOpen, onClose, onSubmit }: Props) {
           <FormElement>
             <Label>Genres</Label>
             <Select
-              name="genreIds"
-              value={formData.genreIds}
+              name="genres"
+              value={formData.genres}
               onChange={handleChange}
               required
               multiple
@@ -140,7 +146,7 @@ export default function AlbumModal({ isOpen, onClose, onSubmit }: Props) {
                 setFormData({
                   title: "",
                   artist: "",
-                  genreIds: [],
+                  genres: [],
                   releaseDate: "",
                 });
                 onClose();
@@ -149,7 +155,9 @@ export default function AlbumModal({ isOpen, onClose, onSubmit }: Props) {
             >
               Cancel
             </StyledButton>
-            <StyledButton type="submit">Add</StyledButton>
+            <StyledButton type="submit">
+              {existingData === undefined ? "Add" : "Update"}
+            </StyledButton>
           </ButtonContainer>
         </Form>
       </ModalContainer>

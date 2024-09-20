@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { useState } from "react";
+import { Artist } from "../features/artists/artistsSlice";
 import { ButtonContainer, StyledButton } from "./button";
 import { Form, FormElement, Input, Label, Textarea } from "./form";
 import { ModalBackground, ModalContainer } from "./modal";
@@ -9,12 +10,18 @@ type Props = {
   isOpen: boolean;
   onClose: Function;
   onSubmit: Function;
+  existingData?: Artist;
 };
 
-export default function ArtistModal({ isOpen, onClose, onSubmit }: Props) {
+export default function ArtistModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  existingData,
+}: Props) {
   const [formData, setFormData] = useState({
-    name: "",
-    bio: "",
+    name: existingData?.name || "",
+    bio: existingData?.bio || "",
   });
 
   const handleChange = (e: any) => {
@@ -26,7 +33,7 @@ export default function ArtistModal({ isOpen, onClose, onSubmit }: Props) {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit({ ...formData, _id: existingData?._id });
     setFormData({
       name: "",
       bio: "",
@@ -45,7 +52,7 @@ export default function ArtistModal({ isOpen, onClose, onSubmit }: Props) {
             marginBottom: "2rem",
           }}
         >
-          Add Artist
+          {existingData === undefined ? "Add Artist" : "Edit Artist"}
         </h2>
         <Form onSubmit={handleSubmit}>
           <FormElement>
@@ -82,7 +89,9 @@ export default function ArtistModal({ isOpen, onClose, onSubmit }: Props) {
             >
               Cancel
             </StyledButton>
-            <StyledButton type="submit">Add</StyledButton>
+            <StyledButton type="submit">
+              {existingData === undefined ? "Add" : "Update"}
+            </StyledButton>
           </ButtonContainer>
         </Form>
       </ModalContainer>

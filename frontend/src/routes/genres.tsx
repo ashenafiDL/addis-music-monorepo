@@ -18,16 +18,24 @@ import {
   addGenre,
   deleteGenre,
   fetchGenres,
+  Genre,
+  updateGenre,
 } from "../features/genres/genresSlice";
 
 export default function Genres() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddingGenre, setIsAddingGenre] = useState(false);
+  const [currentGenre, setCurrentGenre] = useState<Genre | undefined>();
   const dispatch = useDispatch();
   const loading = useSelector((state: any) => state.genres.loading);
   const genres = useSelector((state: any) => state.genres.genres);
 
   const handleAdd = (data: any) => {
     dispatch(addGenre(data));
+  };
+
+  const handleUpdate = (data: any) => {
+    dispatch(updateGenre(data));
   };
 
   const handleDelete = (genreId: string) => {
@@ -43,7 +51,12 @@ export default function Genres() {
       <HeaderContainer>
         <Header>Genres</Header>
 
-        <StyledButton onClick={() => setIsModalOpen(true)}>
+        <StyledButton
+          onClick={() => {
+            setIsAddingGenre(true);
+            setIsModalOpen(true);
+          }}
+        >
           <IconPlus size={20} /> Add new
         </StyledButton>
       </HeaderContainer>
@@ -77,7 +90,13 @@ export default function Genres() {
                   },
                 }}
               >
-                <IconPencil size={20} />
+                <IconPencil
+                  size={20}
+                  onClick={() => {
+                    setCurrentGenre({ ...genre, _id: genre._id });
+                    setIsModalOpen(true);
+                  }}
+                />
                 <IconTrash
                   color="red"
                   size={20}
@@ -89,11 +108,28 @@ export default function Genres() {
         </StyledTableBody>
       </StyledTable>
 
-      <GenreModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAdd}
-      />
+      {isAddingGenre && (
+        <GenreModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setIsAddingGenre(false);
+          }}
+          onSubmit={handleAdd}
+        />
+      )}
+
+      {currentGenre !== undefined && (
+        <GenreModal
+          existingData={currentGenre}
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setCurrentGenre(undefined);
+          }}
+          onSubmit={handleUpdate}
+        />
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Genre {
+export interface Genre {
   _id: string;
   name: string;
   description: string;
@@ -52,6 +52,21 @@ const genresSlice = createSlice({
     addGenreFailure: (state) => {
       state.loading = false;
     },
+    updateGenre: (state, action: PayloadAction<Genre>) => {
+      state.loading = true;
+    },
+    updateGenreSuccess: (state, action: PayloadAction<Genre>) => {
+      const index = state.genres.findIndex(
+        (genre) => genre._id === action.payload._id
+      );
+      if (index !== -1) {
+        state.genres[index] = action.payload;
+      }
+      state.loading = false;
+    },
+    updateGenreFailure: (state) => {
+      state.loading = false;
+    },
   },
 });
 
@@ -65,6 +80,9 @@ export const {
   addGenre,
   addGenreSuccess,
   addGenreFailure,
+  updateGenre,
+  updateGenreSuccess,
+  updateGenreFailure,
 } = genresSlice.actions;
 
 export default genresSlice.reducer;

@@ -13,5 +13,16 @@ export const deleteAlbumApi = async (id: string) => {
 
 export const addAlbumApi = async (newAlbum: any) => {
   const response = await axios.post(`${API_BASE_URL}/albums`, newAlbum);
+  console.log(response.data);
+
   return response.data;
+};
+
+export const updateAlbumApi = async (newAlbum: any) => {
+  const response = await axios.patch(
+    `${API_BASE_URL}/albums/${newAlbum._id}`,
+    newAlbum
+  );
+
+  return response.data.updatedAlbum;
 };
