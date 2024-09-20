@@ -28,8 +28,6 @@ export default function Albums() {
   const albums = useSelector((state: any) => state.albums.albums);
 
   const handleAdd = (data: any) => {
-    console.log(data);
-
     dispatch(addAlbum(data));
   };
 

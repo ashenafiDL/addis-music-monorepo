@@ -30,7 +30,11 @@ router.post("/", async (req, res) => {
     })
 
     await song.save()
-    res.status(201).json(song)
+    const newSong = await Song.findOne(song._id)
+      .populate("artist", "name")
+      .populate("genres", "name")
+      .populate("album", "title")
+    res.status(201).json(newSong)
   } catch (error) {
     res.status(400).json({ message: error.message })
   }
@@ -90,11 +94,12 @@ router.patch("/:id", async (req, res) => {
     const song = await Song.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     })
+    const updatedSong = await Song.findOne(song._id)
       .populate("artist", "name")
       .populate("genres", "name")
       .populate("album", "title")
-    if (!song) return res.status(404).json({ message: "Song not found" })
-    res.status(200).json({ message: "Song updated successfully", song })
+    if (!updatedSong) return res.status(404).json({ message: "Song not found" })
+    res.status(200).json({ message: "Song updated successfully", updatedSong })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }

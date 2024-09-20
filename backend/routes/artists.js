@@ -7,7 +7,7 @@ const router = express.Router()
 router.post("/", async (req, res) => {
   try {
     const artist = new Artist(req.body)
-    await await artist.save()
+    await artist.save()
     res.status(201).json(artist)
   } catch (error) {
     res.status(400).json({ message: error.message })
