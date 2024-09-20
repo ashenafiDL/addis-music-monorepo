@@ -13,8 +13,6 @@ export const deleteAlbumApi = async (id: string) => {
 
 export const addAlbumApi = async (newAlbum: any) => {
   const response = await axios.post(`${API_BASE_URL}/albums`, newAlbum);
-  console.log(response.data);
-
   return response.data;
 };
 

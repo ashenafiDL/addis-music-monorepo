@@ -9,6 +9,7 @@ import reportWebVitals from "./reportWebVitals";
 import Albums from "./routes/albums";
 import Artists from "./routes/artists";
 import Genres from "./routes/genres";
+import MusicStats from "./routes/musicStats";
 import Songs from "./routes/songs";
 import store from "./store";
 
@@ -18,6 +19,11 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "/",
+        element: <MusicStats />,
+        errorElement: <ErrorPage />,
+      },
       {
         path: "/songs",
         element: <Songs />,
