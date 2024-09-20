@@ -38,11 +38,18 @@ router.get("/:id", async (req, res) => {
 // Update a genre by ID
 router.patch("/:id", async (req, res) => {
   try {
-    const genre = await Genre.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    })
-    if (!genre) return res.status(404).json({ message: "Genre not found" })
-    res.status(200).json({ message: "Genre updated successfully", genre })
+    const updatedGenre = await Genre.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+      }
+    )
+    if (!updatedGenre)
+      return res.status(404).json({ message: "Genre not found" })
+    res
+      .status(200)
+      .json({ message: "Genre updated successfully", updatedGenre })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }

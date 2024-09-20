@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Album {
+export interface Album {
   _id: string;
   title: string;
   artist: string;
   releaseDate: number;
-  genres: string;
+  genres: [];
 }
 
 interface AlbumState {
@@ -54,6 +54,23 @@ const albumsSlice = createSlice({
     addAlbumFailure: (state) => {
       state.loading = false;
     },
+    updateAlbum: (state, action: PayloadAction<Album>) => {
+      state.loading = true;
+    },
+    updateAlbumSuccess: (state, action: PayloadAction<any>) => {
+      const index = state.albums.findIndex(
+        (album) => album._id === action.payload._id
+      );
+      console.log(action.payload, "ppp");
+
+      if (index !== -1) {
+        state.albums[index] = action.payload;
+      }
+      state.loading = false;
+    },
+    updateAlbumFailure: (state) => {
+      state.loading = false;
+    },
   },
 });
 
@@ -67,6 +84,9 @@ export const {
   addAlbum,
   addAlbumSuccess,
   addAlbumFailure,
+  updateAlbum,
+  updateAlbumSuccess,
+  updateAlbumFailure,
 } = albumsSlice.actions;
 
 export default albumsSlice.reducer;

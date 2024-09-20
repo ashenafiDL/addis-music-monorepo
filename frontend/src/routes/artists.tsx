@@ -16,18 +16,26 @@ import {
 } from "../components/table";
 import {
   addArtist,
+  Artist,
   deleteArtist,
   fetchArtists,
+  updateArtist,
 } from "../features/artists/artistsSlice";
 
 export default function Artists() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddingArtist, setIsAddingArtist] = useState(false);
+  const [currentArtist, setCurrentArtist] = useState<any | undefined>();
   const dispatch = useDispatch();
   const loading = useSelector((state: any) => state.artists.loading);
   const artists = useSelector((state: any) => state.artists.artists);
 
   const handleAdd = (data: any) => {
     dispatch(addArtist(data));
+  };
+
+  const handleUpdate = (data: Artist) => {
+    dispatch(updateArtist(data));
   };
 
   const handleDelete = (artistId: string) => {
@@ -42,7 +50,12 @@ export default function Artists() {
     <div>
       <HeaderContainer>
         <Header>Artists</Header>
-        <StyledButton onClick={() => setIsModalOpen(true)}>
+        <StyledButton
+          onClick={() => {
+            setIsAddingArtist(true);
+            setIsModalOpen(true);
+          }}
+        >
           <IconPlus size={20} /> Add new
         </StyledButton>
       </HeaderContainer>
@@ -76,7 +89,13 @@ export default function Artists() {
                   },
                 }}
               >
-                <IconPencil size={20} />
+                <IconPencil
+                  size={20}
+                  onClick={() => {
+                    setCurrentArtist({ ...artist, _id: artist._id });
+                    setIsModalOpen(true);
+                  }}
+                />
                 <IconTrash
                   color="red"
                   size={20}
@@ -88,11 +107,28 @@ export default function Artists() {
         </StyledTableBody>
       </StyledTable>
 
-      <ArtistModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAdd}
-      />
+      {isAddingArtist && (
+        <ArtistModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setIsAddingArtist(false);
+          }}
+          onSubmit={handleAdd}
+        />
+      )}
+
+      {currentArtist !== undefined && (
+        <ArtistModal
+          existingData={currentArtist}
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setCurrentArtist(undefined);
+          }}
+          onSubmit={handleUpdate}
+        />
+      )}
     </div>
   );
 }

@@ -16,19 +16,27 @@ import {
 } from "../components/table";
 import {
   addAlbum,
+  Album,
   deleteAlbum,
   fetchAlbums,
+  updateAlbum,
 } from "../features/albums/albumsSlice";
 import formatDate from "../utils/formatDate";
 
 export default function Albums() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddingAlbum, setIsAddingAlbum] = useState(false);
+  const [currentAlbum, setCurrentAlbum] = useState<any | undefined>();
   const dispatch = useDispatch();
   const loading = useSelector((state: any) => state.albums.loading);
   const albums = useSelector((state: any) => state.albums.albums);
 
-  const handleAdd = (data: any) => {
+  const handleAdd = (data: Album) => {
     dispatch(addAlbum(data));
+  };
+
+  const handleUpdate = (data: Album) => {
+    dispatch(updateAlbum(data));
   };
 
   const handleDelete = (albumId: string) => {
@@ -43,7 +51,12 @@ export default function Albums() {
     <div>
       <HeaderContainer>
         <Header>Albums</Header>
-        <StyledButton onClick={() => setIsModalOpen(true)}>
+        <StyledButton
+          onClick={() => {
+            setIsAddingAlbum(true);
+            setIsModalOpen(true);
+          }}
+        >
           <IconPlus size={20} /> Add new
         </StyledButton>
       </HeaderContainer>
@@ -85,7 +98,13 @@ export default function Albums() {
                   },
                 }}
               >
-                <IconPencil size={20} />
+                <IconPencil
+                  size={20}
+                  onClick={() => {
+                    setCurrentAlbum({ ...album, _id: album._id });
+                    setIsModalOpen(true);
+                  }}
+                />
                 <IconTrash
                   color="red"
                   size={20}
@@ -99,11 +118,28 @@ export default function Albums() {
         </StyledTableBody>
       </StyledTable>
 
-      <AlbumModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAdd}
-      />
+      {currentAlbum !== undefined && (
+        <AlbumModal
+          existingData={currentAlbum}
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setCurrentAlbum(undefined);
+          }}
+          onSubmit={handleUpdate}
+        />
+      )}
+
+      {isAddingAlbum && (
+        <AlbumModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setIsAddingAlbum(false);
+          }}
+          onSubmit={handleAdd}
+        />
+      )}
     </div>
   );
 }

@@ -85,7 +85,7 @@ export default function SongModal({
             marginBottom: "2rem",
           }}
         >
-          {existingData ? "Add Music" : "Edit Music"}
+          {existingData === undefined ? "Add Music" : "Edit Music"}
         </h2>
         <Form onSubmit={handleSubmit}>
           <FormElement>
@@ -176,7 +176,7 @@ export default function SongModal({
               Cancel
             </StyledButton>
             <StyledButton type="submit">
-              {existingData !== undefined ? "Update" : "Add"}
+              {existingData === undefined ? "Add" : "Update"}
             </StyledButton>
           </ButtonContainer>
         </Form>

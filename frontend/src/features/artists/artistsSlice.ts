@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Artist {
+export interface Artist {
   _id: string;
   name: string;
   bio: string;
@@ -52,6 +52,21 @@ const artistsSlice = createSlice({
     addArtistFailure: (state) => {
       state.loading = false;
     },
+    updateArtist: (state, action: PayloadAction<Artist>) => {
+      state.loading = true;
+    },
+    updateArtistSuccess: (state, action: PayloadAction<Artist>) => {
+      const index = state.artists.findIndex(
+        (artist) => artist._id === action.payload._id
+      );
+      if (index !== -1) {
+        state.artists[index] = action.payload;
+      }
+      state.loading = false;
+    },
+    updateArtistFailure: (state) => {
+      state.loading = false;
+    },
   },
 });
 
@@ -65,6 +80,9 @@ export const {
   addArtist,
   addArtistSuccess,
   addArtistFailure,
+  updateArtist,
+  updateArtistSuccess,
+  updateArtistFailure,
 } = artistsSlice.actions;
 
 export default artistsSlice.reducer;

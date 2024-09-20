@@ -40,8 +40,6 @@ export default function Songs() {
   };
 
   const handleUpdate = (data: Song) => {
-    console.log(data, "ggg");
-
     dispatch(updateSong(data));
   };
 
